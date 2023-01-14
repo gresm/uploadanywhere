@@ -26,10 +26,8 @@ wsgi_path: Path | None = None
 
 
 def _wsgi_manual_config():
-    global wsgi_path
-
     if input("Proceed with manual configuration? (y/n): ") in {"y", "yes", "Y", "YES"}:
-        wsgi_path = Path(input("Enter valid path for pythonanywhere wsgi python file: "))
+        globals()["wsgi_path"] = Path(input("Enter valid path for wsgi python file: "))
         if not (wsgi_path.exists() and wsgi_path.is_file()):
             _error("Invalid path.")
     else:
