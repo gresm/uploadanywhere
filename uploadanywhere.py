@@ -37,6 +37,20 @@ def _warning(warn):
     print(f"WARNING: {warn}")
 
 
+def _if_test(inp):
+    return input(f"{inp} (y/n): ") in {"y", "yes", "Y", "YES"}
+
+
+def _test_path(path: Path, is_file):
+    if not path.exists():
+        _error(f"Invalid path '{str(wsgi_path)}'")
+    if path.is_file():
+        if not is_file:
+            _error(f"Path '{str(path)}' is a file.")
+    elif is_file:
+        _error(f"Path '{str(path)}' is not a file.")
+
+
 try:
     import git
 except ImportError:
@@ -44,14 +58,15 @@ except ImportError:
 
 
 wsgi_dir = Path("/var/www")
+proj_home = Path("/home")
 wsgi_path: Path | None = None
+proj_path: Path | None = None
 
 
 def _wsgi_manual_config():
-    if input("Proceed with manual configuration? (y/n): ") in {"y", "yes", "Y", "YES"}:
+    if _if_test("Proceed with manual configuration?"):
         globals()["wsgi_path"] = Path(input("Enter valid path for wsgi python file: "))
-        if not (wsgi_path.exists() and wsgi_path.is_file()):
-            _error("Invalid path.")
+        _test_path(wsgi_path, True)
     else:
         sys.exit(0)
 
@@ -72,7 +87,7 @@ if wsgi_path is None:
         _warning("WSGI default setup folder empty.")
         _wsgi_manual_config()
     elif len(possible) == 1:
-        if input(f"Select {str(possible[0])} (y/n): ") in {"y", "yes", "Y", "YES"}:
+        if _if_test(f"Select {str(possible[0])}"):
             wsgi_path = possible[0]
         else:
             _wsgi_manual_config()
@@ -97,5 +112,11 @@ if wsgi_path is None:
 if wsgi_path is None:
     _error("Unknown error, WSGI file not found.")
 
-if not (wsgi_path.exists() and wsgi_path.is_file()):
-    _error(f"Invalid path '{str(wsgi_path)}'")
+
+_test_path(wsgi_path, True)
+
+print("Selecting project.")
+if _if_test("Use default project layout?"):
+    proj_name = input("Enter project name: ")
+    proj_path = proj_home / proj_name / "mysite"
+    _test_path(proj_path, False)
