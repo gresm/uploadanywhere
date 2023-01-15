@@ -26,6 +26,7 @@ Utility to configure pythonanywhere with github.
 from __future__ import annotations
 from pathlib import Path
 import sys
+import os
 
 
 def _error(err):
@@ -55,6 +56,12 @@ try:
     from git.repo import Repo
 except ImportError:
     _error("'gitpython' package not found. Run 'pip install gitpython' before this script.")
+
+
+try:
+    import uploadanywhere
+except ImportError:
+    _error("'uploadanywhere' not found. Run 'pip install https://github.com/gresm/uploadanywhere'")
 
 
 wsgi_dir = Path("/var/www")
