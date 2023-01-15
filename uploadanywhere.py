@@ -52,7 +52,7 @@ def _test_path(path: Path, is_file):
 
 
 try:
-    import git
+    from git.repo import Repo
 except ImportError:
     _error("'gitpython' package not found. Run 'pip install gitpython' before this script.")
 
@@ -61,6 +61,8 @@ wsgi_dir = Path("/var/www")
 proj_home = Path("/home")
 wsgi_path: Path | None = None
 proj_path: Path | None = None
+
+git_repo: Repo | None = None
 
 
 def _wsgi_manual_config():
@@ -71,7 +73,7 @@ def _wsgi_manual_config():
         sys.exit(0)
 
 
-print("Searching for WSGI file to patch")
+print("Searching for WSGI file to patch.")
 if not wsgi_dir.exists():
     _warning("WSGI setup files folder not found.")
     _wsgi_manual_config()
@@ -87,7 +89,7 @@ if wsgi_path is None:
         _warning("WSGI default setup folder empty.")
         _wsgi_manual_config()
     elif len(possible) == 1:
-        if _if_test(f"Select {str(possible[0])}"):
+        if _if_test(f"Use {str(possible[0])}?"):
             wsgi_path = possible[0]
         else:
             _wsgi_manual_config()
@@ -97,7 +99,7 @@ if wsgi_path is None:
         print(f"[{idx + 1}] {str(file)}")
 
     option = input("Select file number, or nothing for manual configuration: ")
-    if option is None:
+    if not option:
         _wsgi_manual_config()
     else:
         if option.isdigit():
@@ -120,3 +122,14 @@ if _if_test("Use default project layout?"):
     proj_name = input("Enter project name: ")
     proj_path = proj_home / proj_name / "mysite"
     _test_path(proj_path, False)
+else:
+    proj_path = Path(input("Enter project path: "))
+    _test_path(proj_path, False)
+
+repo_url = input("Enter git repository url: ")
+if _if_test("Clone the repository?"):
+    git_repo = Repo.clone_from(repo_url, proj_path)
+else:
+    git_repo = Repo(proj_path)
+
+setup_post_commit_hook = _if_test("Setup post-commit hook?")
