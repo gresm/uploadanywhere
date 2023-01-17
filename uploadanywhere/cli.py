@@ -13,6 +13,7 @@ try:
 except ImportError:
     # If colorama is not found.
     if sys.platform == "win32":
+        # This should never happen.
         RED = ""
         RESET = ""
         YELLOW = ""
