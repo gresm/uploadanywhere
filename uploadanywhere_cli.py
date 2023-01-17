@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 """
-Utility to configure pythonanywhere with github.
+Uploadanywhere installer script.
 """
 from __future__ import annotations
 from pathlib import Path
