@@ -5,20 +5,27 @@ from pathlib import Path
 
 
 try:
-    from colorama import Back as _Back
-    RED = _Back.RED
-    RESET = _Back.RESET
-    YELLOW = _Back.YELLOW
+    from colorama import Fore as _Fore, just_fix_windows_console
+    RED = _Fore.RED
+    RESET = _Fore.RESET
+    YELLOW = _Fore.YELLOW
+    just_fix_windows_console()
 except ImportError:
-    RED = ""
-    RESET = ""
-    YELLOW = ""
+    # If colorama is not found.
+    if sys.platform == "win32":
+        RED = ""
+        RESET = ""
+        YELLOW = ""
+    else:
+        RED = "\033[31m"
+        RESET = "\033[39m"
+        YELLOW = "\033[33m"
 
 
-def error(err, exit=True):
+def error(err, do_exit=True):
     """Print error."""
     print(f"{RED}ERROR:{RESET} {err}", sys.stderr)
-    if exit:
+    if do_exit:
         sys.exit(1)
 
 
