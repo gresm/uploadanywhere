@@ -4,6 +4,7 @@ from setuptools import setup
 
 
 long_description = Path("README.md").read_text("utf-8")
+requirements = Path("requirements.txt").read_text("utf-8").splitlines()
 
 
 setup(
@@ -15,4 +16,5 @@ setup(
     url="https://github.com/gresm/uploadanywhere",
     packages=["uploadanywhere"],
     package_dir={"uploadanywhere": "uploadanywhere"},
+    install_requires=requirements
 )
