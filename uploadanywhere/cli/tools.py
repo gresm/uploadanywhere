@@ -1,5 +1,14 @@
 """Command line utilities for "uploadanywhere" package."""
 
+
+__all__ = [
+    "error",
+    "warning",
+    "if_test",
+    "test_path"
+]
+
+
 import sys
 from pathlib import Path
 
