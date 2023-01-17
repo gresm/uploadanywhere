@@ -25,14 +25,14 @@ except ImportError:
 
 def error(err, do_exit=True):
     """Print error."""
-    print(f"{RED}ERROR:{RESET} {err}", sys.stderr)
+    print(f"{RED}ERROR:{RESET} {err}", file=sys.stderr)
     if do_exit:
         sys.exit(1)
 
 
 def warning(warn):
     """Print warning."""
-    print(f"{YELLOW}WARNING:{RESET} {warn}", sys.stderr)
+    print(f"{YELLOW}WARNING:{RESET} {warn}", file=sys.stderr)
 
 
 def if_test(inp):
