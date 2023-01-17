@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 """
-Find WSGI file.
+Utility for finding WSGI file.
 """
 from __future__ import annotations
 
@@ -44,15 +44,15 @@ WSGI_DEFAULT_DIR = _Path("/var/www")
 class WSGIFinder:
     """WSGI Finder class"""
 
-    def __init__(self, wsgi_dir: _Path | None = None):
-        self.file: _Path | None = None
+    def __init__(self, wsgi_file: _Path | None = None, wsgi_dir: _Path | None = None):
+        self.file: _Path | None = wsgi_file
         self.wsgi_dir = wsgi_dir or WSGI_DEFAULT_DIR
 
     def found(self):
         """Return True if WSGI file found, False otherwise."""
         return self.file is not None
 
-    def manual_selection(self):
+    def cli_manual_selection(self):
         """Manually select wsgi file path."""
 
         if self.found():
@@ -65,7 +65,7 @@ class WSGIFinder:
         else:
             sys.exit(0)
 
-    def select_from_dir(self):
+    def cli_select_from_dir(self):
         """Choose between files in wsgi directory"""
 
         if self.found():
@@ -79,12 +79,12 @@ class WSGIFinder:
 
         if len(possible) == 0:
             warning("WSGI default setup folder empty.")
-            self.manual_selection()
+            self.cli_manual_selection()
         elif len(possible) == 1:
             if if_test(f"Use {str(possible[0])}?"):
                 self.file = possible[0]
             else:
-                self.manual_selection()
+                self.cli_manual_selection()
 
         print("Possible files:")
         for idx, file in enumerate(possible):
@@ -92,7 +92,7 @@ class WSGIFinder:
 
         option = input("Select file number, or nothing for manual configuration: ")
         if not option:
-            self.manual_selection()
+            self.cli_manual_selection()
         else:
             if option.isdigit():
                 opt = int(option)
@@ -102,12 +102,11 @@ class WSGIFinder:
             else:
                 error("Not a number.")
 
-
-    def find(self):
+    def cli_find(self):
         """Find wsgi file"""
         print("Searching for WSGI file to patch.")
         if not self.wsgi_dir.exists():
             warning("WSGI setup files folder not found.")
-            self.manual_selection()
-        self.select_from_dir()
+            self.cli_manual_selection()
+        self.cli_select_from_dir()
         return self.file

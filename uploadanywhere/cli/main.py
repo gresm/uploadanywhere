@@ -37,8 +37,7 @@ from .wsgi_finder import WSGIFinder
 proj_home = Path("/home")
 # wsgi_path: Path | None = None
 proj_path: Path | None = None
-
-# git_repo: Repo | None = None
+git_repo: Repo | None = None
 
 
 # def _wsgi_manual_config():
@@ -87,7 +86,7 @@ proj_path: Path | None = None
 #             error("Not a number.")
 
 find_wsgi = WSGIFinder()
-wsgi_path = find_wsgi.find()
+wsgi_path = find_wsgi.cli_find()
 
 if wsgi_path is None:
     error("Unknown error, WSGI file not found.")
