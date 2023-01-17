@@ -33,7 +33,9 @@ try:
     from uploadanywhere.cli import error, warning, if_test, test_path
 except ImportError:
     print("Package 'uploadanywhere' not found. Running automatic installment")
-    os.system("pip install git+https://github.com/gresm/uploadanywhere@main")
+    if os.system("pip install git+https://github.com/gresm/uploadanywhere@main") != 0:
+        print("Instalation script returned with non-zero code, aborting.")
+        sys.exit(1)
     try:
         from uploadanywhere.cli import error, warning, if_test, test_path
     except ImportError:
