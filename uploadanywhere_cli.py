@@ -122,4 +122,4 @@ if if_test("Clone the repository?"):
 else:
     git_repo = Repo(proj_path)
 
-setup_post_commit_hook = if_test("Setup post-commit hook?")
+setup_post_commit_hook = if_test("Setup local post-commit hook?")
