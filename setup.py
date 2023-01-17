@@ -14,5 +14,5 @@ setup(
     author="gresm",
     url="https://github.com/gresm/uploadanywhere",
     packages=["uploadanywhere"],
-    package_dir={"": ""},
+    package_dir={"uploadanywhere": "uploadanywhere"},
 )
