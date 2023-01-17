@@ -29,39 +29,15 @@ import sys
 import os
 
 
-def _error(err):
-    print(f"ERROR: {err}")
-    sys.exit(1)
-
-
-def _warning(warn):
-    print(f"WARNING: {warn}")
-
-
-def _if_test(inp):
-    return input(f"{inp} (y/n): ") in {"y", "yes", "Y", "YES"}
-
-
-def _test_path(path: Path, is_file):
-    if not path.exists():
-        _error(f"Invalid path '{str(wsgi_path)}'")
-    if path.is_file():
-        if not is_file:
-            _error(f"Path '{str(path)}' is a file.")
-    elif is_file:
-        _error(f"Path '{str(path)}' is not a file.")
-
-
 try:
-    from git.repo import Repo
+    from uploadanywhere.cli import error, warning, if_test, test_path
 except ImportError:
-    _error("'gitpython' package not found. Run 'pip install gitpython' before this script.")
+    print("Package 'uploadanywhere' not found. Running automatic installment")
+    os.system("pip install https://github.com/gresm/uploadanywhere")
+    print("Intalled, please run the script again.")
+    sys.exit(0)
 
-
-try:
-    import uploadanywhere
-except ImportError:
-    _error("'uploadanywhere' not found. Run 'pip install https://github.com/gresm/uploadanywhere'")
+from git.repo import Repo
 
 
 wsgi_dir = Path("/var/www")
@@ -73,16 +49,16 @@ git_repo: Repo | None = None
 
 
 def _wsgi_manual_config():
-    if _if_test("Proceed with manual configuration?"):
+    if if_test("Proceed with manual configuration?"):
         globals()["wsgi_path"] = Path(input("Enter valid path for wsgi python file: "))
-        _test_path(wsgi_path, True)
+        test_path(wsgi_path, True)
     else:
         sys.exit(0)
 
 
 print("Searching for WSGI file to patch.")
 if not wsgi_dir.exists():
-    _warning("WSGI setup files folder not found.")
+    warning("WSGI setup files folder not found.")
     _wsgi_manual_config()
 
 if wsgi_path is None:
@@ -93,10 +69,10 @@ if wsgi_path is None:
             possible.append(possible_path)
 
     if len(possible) == 0:
-        _warning("WSGI default setup folder empty.")
+        warning("WSGI default setup folder empty.")
         _wsgi_manual_config()
     elif len(possible) == 1:
-        if _if_test(f"Use {str(possible[0])}?"):
+        if if_test(f"Use {str(possible[0])}?"):
             wsgi_path = possible[0]
         else:
             _wsgi_manual_config()
@@ -112,31 +88,31 @@ if wsgi_path is None:
         if option.isdigit():
             opt = int(option)
             if not 0 < opt <= len(possible):
-                _error("Invalid index.")
+                error("Invalid index.")
             wsgi_path = possible[opt]
         else:
-            _error("Not a number.")
+            error("Not a number.")
 
 
 if wsgi_path is None:
-    _error("Unknown error, WSGI file not found.")
+    error("Unknown error, WSGI file not found.")
 
 
-_test_path(wsgi_path, True)
+test_path(wsgi_path, True)
 
 print("Selecting project.")
-if _if_test("Use default project layout?"):
+if if_test("Use default project layout?"):
     proj_name = input("Enter project name: ")
     proj_path = proj_home / proj_name / "mysite"
-    _test_path(proj_path, False)
+    test_path(proj_path, False)
 else:
     proj_path = Path(input("Enter project path: "))
-    _test_path(proj_path, False)
+    test_path(proj_path, False)
 
 repo_url = input("Enter git repository url: ")
-if _if_test("Clone the repository?"):
+if if_test("Clone the repository?"):
     git_repo = Repo.clone_from(repo_url, proj_path)
 else:
     git_repo = Repo(proj_path)
 
-setup_post_commit_hook = _if_test("Setup post-commit hook?")
+setup_post_commit_hook = if_test("Setup post-commit hook?")
