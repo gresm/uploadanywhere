@@ -33,13 +33,6 @@ from .tools import if_test, test_path, error
 from .wsgi_finder import WSGIFinder
 
 
-# wsgi_dir = Path("/var/www")
-proj_home = Path("/home")
-# wsgi_path: Path | None = None
-proj_path: Path | None = None
-git_repo: Repo | None = None
-
-
 # def _wsgi_manual_config():
 #     if if_test("Proceed with manual configuration?"):
 #         globals()["wsgi_path"] = Path(input("Enter valid path for wsgi python file: "))
@@ -85,28 +78,40 @@ git_repo: Repo | None = None
 #         else:
 #             error("Not a number.")
 
-find_wsgi = WSGIFinder()
-wsgi_path = find_wsgi.cli_find()
+def main():
+    """Main cli function"""
 
-if wsgi_path is None:
-    error("Unknown error, WSGI file not found.")
+    # wsgi_dir = Path("/var/www")
+    proj_home = Path("/home")
+    # wsgi_path: Path | None = None
+    proj_path: Path | None = None
+    git_repo: Repo | None = None
 
-test_path(wsgi_path, True)
+    find_wsgi = WSGIFinder()
+    wsgi_path = find_wsgi.cli_find()
+
+    if wsgi_path is None:
+        error("Unknown error, WSGI file not found.")
+
+    test_path(wsgi_path, True)
+
+    print("Selecting project.")
+    if if_test("Use default project layout?"):
+        proj_name = input("Enter project name: ")
+        proj_path = proj_home / proj_name / "mysite"
+        test_path(proj_path, False)
+    else:
+        proj_path = Path(input("Enter project path: "))
+        test_path(proj_path, False)
+
+    repo_url = input("Enter git repository url: ")
+    if if_test("Clone the repository?"):
+        git_repo = Repo.clone_from(repo_url, proj_path)
+    else:
+        git_repo = Repo(proj_path)
+
+    setup_post_commit_hook = if_test("Setup local post-commit hook?")
 
 
-print("Selecting project.")
-if if_test("Use default project layout?"):
-    proj_name = input("Enter project name: ")
-    proj_path = proj_home / proj_name / "mysite"
-    test_path(proj_path, False)
-else:
-    proj_path = Path(input("Enter project path: "))
-    test_path(proj_path, False)
-
-repo_url = input("Enter git repository url: ")
-if if_test("Clone the repository?"):
-    git_repo = Repo.clone_from(repo_url, proj_path)
-else:
-    git_repo = Repo(proj_path)
-
-setup_post_commit_hook = if_test("Setup local post-commit hook?")
+if __name__ == "__main__":
+    main()
