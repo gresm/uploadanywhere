@@ -101,7 +101,7 @@ class BaseFinder(ABC):
         """Find through interactive console"""
 
     def manual_selection(self):
-        """Manually select wsgi file path."""
+        """Manually select file path."""
 
         if self.found():
             return

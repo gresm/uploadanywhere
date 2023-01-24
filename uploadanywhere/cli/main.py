@@ -88,7 +88,7 @@ def main():
     git_repo: Repo | None = None
 
     find_wsgi = WSGIFinder()
-    wsgi_path = find_wsgi.cli_find()
+    wsgi_path = find_wsgi.find()
 
     if wsgi_path is None:
         error("Unknown error, WSGI file not found.")
