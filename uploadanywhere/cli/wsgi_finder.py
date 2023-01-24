@@ -33,7 +33,6 @@ __all__ = [
 
 
 from pathlib import Path as _Path
-# import sys
 
 
 from .base_finder import BaseFinder
@@ -49,56 +48,6 @@ class WSGIFinder(BaseFinder):
 
     searching_for = "wsgi file"
     searching_for_file = True
-
-    # def cli_manual_selection(self):
-    #     """Manually select wsgi file path."""
-
-    #     if self.found():
-    #         return
-
-    #     if if_test("Proceed with manual configuration?"):
-    #         path = _Path(input("Enter valid path for wsgi python file: "))
-    #         test_path(path, True)
-    #         self.file = path
-    #     else:
-    #         sys.exit(0)
-
-    # def cli_select_from_dir(self):
-    #     """Choose between files in wsgi directory"""
-
-    #     if self.found():
-    #         return
-
-    #     possible = []
-
-    #     for possible_path in self.path.iterdir():
-    #         if possible_path.is_file() and possible_path.suffix == ".py":
-    #             possible.append(possible_path)
-
-    #     if len(possible) == 0:
-    #         warning("WSGI default setup folder empty.")
-    #         self.cli_manual_selection()
-    #     elif len(possible) == 1:
-    #         if if_test(f"Use {str(possible[0])}?"):
-    #             self.file = possible[0]
-    #         else:
-    #             self.cli_manual_selection()
-
-    #     print("Possible files:")
-    #     for idx, file in enumerate(possible):
-    #         print(f"[{idx + 1}] {str(file)}")
-
-    #     option = input("Select file number, or nothing for manual configuration: ")
-    #     if not option:
-    #         self.cli_manual_selection()
-    #     else:
-    #         if option.isdigit():
-    #             opt = int(option)
-    #             if not 0 < opt <= len(possible):
-    #                 error("Invalid index.")
-    #             self.file = possible[opt]
-    #         else:
-    #             error("Not a number.")
 
     def find(self):
         """Find wsgi file"""

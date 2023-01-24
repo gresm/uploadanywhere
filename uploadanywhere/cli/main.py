@@ -28,55 +28,13 @@ from pathlib import Path
 
 from git.repo import Repo
 
+try:
+    from .tools import if_test, test_path, error
+    from .wsgi_finder import WSGIFinder
+except ImportError:
+    from uploadanywhere.cli.tools import if_test, test_path, error
+    from uploadanywhere.cli.wsgi_finder import WSGIFinder
 
-from .tools import if_test, test_path, error
-from .wsgi_finder import WSGIFinder
-
-
-# def _wsgi_manual_config():
-#     if if_test("Proceed with manual configuration?"):
-#         globals()["wsgi_path"] = Path(input("Enter valid path for wsgi python file: "))
-#         test_path(wsgi_path, True)
-#     else:
-#         sys.exit(0)
-
-
-# print("Searching for WSGI file to patch.")
-# if not wsgi_dir.exists():
-#     warning("WSGI setup files folder not found.")
-#     _wsgi_manual_config()
-
-# if wsgi_path is None:
-#     possible = []
-
-#     for possible_path in wsgi_dir.iterdir():
-#         if possible_path.is_file() and possible_path.suffix == ".py":
-#             possible.append(possible_path)
-
-#     if len(possible) == 0:
-#         warning("WSGI default setup folder empty.")
-#         _wsgi_manual_config()
-#     elif len(possible) == 1:
-#         if if_test(f"Use {str(possible[0])}?"):
-#             wsgi_path = possible[0]
-#         else:
-#             _wsgi_manual_config()
-
-#     print("Possible files:")
-#     for idx, file in enumerate(possible):
-#         print(f"[{idx + 1}] {str(file)}")
-
-#     option = input("Select file number, or nothing for manual configuration: ")
-#     if not option:
-#         _wsgi_manual_config()
-#     else:
-#         if option.isdigit():
-#             opt = int(option)
-#             if not 0 < opt <= len(possible):
-#                 error("Invalid index.")
-#             wsgi_path = possible[opt]
-#         else:
-#             error("Not a number.")
 
 def main():
     """Main cli function"""

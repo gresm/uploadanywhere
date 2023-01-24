@@ -22,6 +22,12 @@
 """BaseFinder is an abstract class for different finders."""
 from __future__ import annotations
 
+
+__all__ = [
+    "BaseFinder"
+]
+
+
 from abc import ABC, abstractmethod
 from pathlib import Path as _Path
 import sys
