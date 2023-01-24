@@ -74,7 +74,7 @@ def if_test(inp):
 def test_path(path: Path, is_file):
     """Test if path is valid"""
     if not path.exists():
-        error(f"Invalid path '{str(path)}'")
+        error(f"Invalid path '{str(path)}'.")
     if path.is_file():
         if not is_file:
             error(f"Path '{str(path)}' is a file.")
