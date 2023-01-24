@@ -28,19 +28,14 @@ from __future__ import annotations
 
 from pathlib import Path as _Path
 
+from .base_finder import BaseFinder
+
 
 DEFAULT_PROJECTS_DIR = _Path("/home")
 
 
-class ProjectFinder:
+class ProjectFinder(BaseFinder):
     """Project Finder class"""
-
-    def __init__(self, project: _Path | None = None):
-        self.file: _Path | None = project
-
-    def found(self):
-        """Return True if project directory was found, False otherwise."""
-        return self.file is not None
 
     def cli_find(self):
         """Find project directory"""
