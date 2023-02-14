@@ -37,6 +37,8 @@ from .tools import test_path, warning, if_test, error
 class BaseFinder(ABC):
     """Base class for the finders."""
 
+    path: _Path
+
     DEFAULT_SEARCH_DIR: _Path | None = None
 
     searching_for: str = ""
@@ -67,7 +69,7 @@ class BaseFinder(ABC):
 
         return possible
 
-    def select_file_from_dir(self, path: _Path, is_dir: bool = False):
+    def select_from_dir(self, path: _Path, is_dir: bool = False):
         """Select file from directory."""
         if self.found():
             return
@@ -100,11 +102,19 @@ class BaseFinder(ABC):
         if not 0 < selection <= len(select):
             error("Invalid index.")
 
-        self.path = select[selection]
+        self.path = select[selection - 1]
 
     @abstractmethod
+    def _find(self):
+        pass
+
     def find(self):
         """Find through interactive console"""
+        self._find()
+        if self.path is None:
+            self.error(f"Unknown error, {self.searching_for} not found.")
+        self.test_path(self.path, self.searching_for_file)
+        return self.path
 
     def manual_selection(self):
         """Manually select file path."""

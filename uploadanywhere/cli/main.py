@@ -31,36 +31,24 @@ from git.repo import Repo
 try:
     from .tools import if_test, test_path, error
     from .wsgi_finder import WSGIFinder
+    from .project_finder import ProjectFinder
 except ImportError:
     from uploadanywhere.cli.tools import if_test, test_path, error
     from uploadanywhere.cli.wsgi_finder import WSGIFinder
+    from uploadanywhere.cli.project_finder import ProjectFinder
 
 
 def main():
     """Main cli function"""
-
-    # wsgi_dir = Path("/var/www")
-    proj_home = Path("/home")
-    # wsgi_path: Path | None = None
-    proj_path: Path | None = None
     git_repo: Repo | None = None
 
     find_wsgi = WSGIFinder()
     wsgi_path = find_wsgi.find()
+    
+    find_proj = ProjectFinder()
+    proj_path = find_proj.find()
 
-    if wsgi_path is None:
-        error("Unknown error, WSGI file not found.")
-
-    test_path(wsgi_path, True)
-
-    print("Selecting project.")
-    if if_test("Use default project layout?"):
-        proj_name = input("Enter project name: ")
-        proj_path = proj_home / proj_name / "mysite"
-        test_path(proj_path, False)
-    else:
-        proj_path = Path(input("Enter project path: "))
-        test_path(proj_path, False)
+    print(wsgi_path, proj_path)
 
     repo_url = input("Enter git repository url: ")
     if if_test("Clone the repository?"):

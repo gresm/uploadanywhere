@@ -37,5 +37,15 @@ DEFAULT_PROJECTS_DIR = _Path("/home")
 class ProjectFinder(BaseFinder):
     """Project Finder class"""
 
-    def cli_find(self):
-        """Find project directory"""
+    searching_for = "project directory"
+    searching_for_file = False
+    DEFAULT_SEARCH_DIR = DEFAULT_PROJECTS_DIR
+
+    def _find(self):
+        print("Selecting project.")
+        if self.if_test("Use default project layout?"):
+            self.select_from_dir(self.DEFAULT_SEARCH_DIR, True)
+            self.path = self.path / "mysite"
+            self.test_path(self.path, False)
+        else:
+            self.manual_selection()

@@ -46,14 +46,14 @@ class WSGIFinder(BaseFinder):
 
     DEFAULT_SEARCH_DIR = WSGI_DEFAULT_DIR
 
-    searching_for = "wsgi file"
+    searching_for = "WSGI file"
     searching_for_file = True
 
-    def find(self):
+    def _find(self):
         """Find wsgi file"""
         print("Searching for WSGI file to patch.")
         if not self.search_dir.exists():
             self.warning("WSGI setup files folder not found.")
             self.manual_selection()
-        self.select_file_from_dir(self.search_dir, False)
+        self.select_from_dir(self.search_dir, False)
         return self.path
